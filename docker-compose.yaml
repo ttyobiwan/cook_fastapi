@@ -1,0 +1,20 @@
+version: "3.8"
+
+x-default-app:
+  &default-app
+  build:
+    context: .
+    dockerfile: ./docker/Dockerfile
+    target: dev
+  volumes:
+    - .:/code
+  stdin_open: true
+  tty: true
+
+services:
+  fastapi:
+    <<: *default-app
+    ports:
+      - 8080:8080
+    env_file:
+      - .env

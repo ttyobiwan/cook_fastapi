@@ -1,0 +1,39 @@
+{
+    "extends": [
+        "config:base"
+    ],
+    "assigneesFromCodeOwners": true,
+    "packageRules": [
+        {
+            "matchPackagePatterns": [
+                "*"
+            ],
+            "matchUpdateTypes": [
+                "minor",
+                "patch"
+            ],
+            "groupName": "all non-major dependencies",
+            "groupSlug": "non-major",
+            "automerge": false,
+            "labels": [
+                "dependencies"
+            ]
+        },
+        {
+            "matchPackagePatterns": [
+                "*"
+            ],
+            "matchUpdateTypes": [
+                "major"
+            ],
+            "labels": [
+                "dependencies"
+            ]
+        }
+    ],
+    "pip_requirements": {
+        "fileMatch": [
+            "^requirements/.*\\.txt$"
+        ]
+    }
+}

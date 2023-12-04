@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-20.04
+    env:
+      DEBUG: True
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Load pip cache
+        id: pip-cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.pythonLocation }}
+          key: pip-${{ hashFiles('./requirements/*.txt') }}
+
+      - name: Install Dependencies
+        run: pip install -r ./requirements/local.txt
+        if: steps.pip-cache.outputs.cache-hit != 'true'
+
+      - name: Load pre-commit cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Run pre-commit hooks
+        run: make lint
+
+      - name: Run tests with pytest
+        run: make test
